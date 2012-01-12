@@ -12,6 +12,16 @@ if (3 !== count($argv)) {
     exit;
 }
 
+function println($message, $title = 'Tomuss')
+{
+    echo $title.': '.$message.PHP_EOL;
+
+    // if the user is a mac osx user, we can use growlnotifier
+    if ('Darwin' === PHP_OS) {
+        exec(sprintf('growlnotify -t "%s" -n "Tomuss" -m "%s"', $title, $message));
+    }
+}
+
 $notesFile = __DIR__.'/notes';
 $notes = array();
 
@@ -29,7 +39,7 @@ $response = $browser->get('http://tomuss.univ-lyon1.fr');
 
 // "lt" hidden field
 if (0 === preg_match('/name="lt" value="([A-Za-z0-9-]+)"/', $response->getContent(), $matches)) {
-    echo "Oops! Unable to find the 'lt' hidden field from the content reponse... Are you in the CAS login form?\n";
+    println('Oops! Unable to find the "lt" hidden field from the content reponse... Are you in the CAS login form?');
     exit;
 }
 
@@ -45,13 +55,13 @@ $response = $browser->submit('https://cas.univ-lyon1.fr/cas/login?service=https:
 ));
 
 if (preg_match('/un nom d\'utilisateur ou un mot de passe invalide/', $response->getContent())) {
-    echo "Bad login/password.\n";
+    println('Bad login/password');
     exit;
 }
 
 // Stupid javascript redirection ... We NEED the token!
 if (0 === preg_match('/window.location.href="https:\/\/tomuss.univ-lyon1.fr\/\?ticket=([A-Za-z0-9-]+)";/', $response->getContent(), $matches)) {
-    echo "Oops! Unable to find the token from the CAS...\n";
+    println('Oops! Unable to find the token from the CAS...');
     exit;
 }
 
@@ -71,22 +81,25 @@ if (0 === preg_match_all($regex, $output, $matches, PREG_SET_ORDER)) {
     exit;
 }
 
+$new = false;
 foreach($matches as $note) {
     if (isset($notes[$note[4]])) {
         // Note alreay exists
         continue;
     }
 
+    $new = true;
     $notes[$note[4]] = array(
         'by'   => $note[3],
         'note' => $note[1]
     );
 
-    echo sprintf('Nouvelle note: %s par %s'.PHP_EOL, $note[1], $note[3]);
-
-    // Comment this line if you're not a mac osx user using growl
-    exec(sprintf('growlnotify -t "Nouvelle note Tomuss" -n "Tomuss" -m "%s postée par %s"', $note[1], $note[3]));
+    println(sprintf('%s postée par %s', $note[1], $note[3]));
 }
 
-// dump!
-file_put_contents($notesFile, serialize($notes));
+if (false === $new) {
+    println('Aucune nouvelle note disponible.');
+} else {
+    // dump!
+    file_put_contents($notesFile, serialize($notes));
+}
