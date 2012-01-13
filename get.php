@@ -6,20 +6,40 @@
 
 require_once __DIR__.'/vendor/.composer/autoload.php';
 
-if (3 !== count($argv)) {
+$length = count($argv);
+if ($length < 3 || $length > 4) {
     echo "Too few arguments\n";
-    echo "Syntax: php get.php <username> <password>\n";
+    echo "Syntax: php get.php <username> <password> [get|show]\n";
     exit;
+}
+
+// Check for action
+$action = 'get';
+if (isset($argv[3])) {
+    if (false === in_array($argv[3], array('get', 'show'))) {
+        throw new InvalidArgumentException('The action must be (get,show).');
+    }
+
+    $action = $argv[3]; // 'get' or 'show'
 }
 
 function println($message, $title = 'Tomuss')
 {
     echo $title.': '.$message.PHP_EOL;
 
-    // if the user is a mac osx user, we can use growlnotifier
-    if ('Darwin' === PHP_OS) {
-        exec(sprintf('growlnotify -t "%s" -n "Tomuss" -m "%s"', $title, $message));
-    }
+    // Growl notification
+    $grownotifier = '/usr/local/bin/growlnotify';
+    exec(sprintf('[ -e %s ] && %s -t "%s" -n "Tomuss" -m "%s"',
+            $grownotifier,
+            $grownotifier,
+            $title,
+            $message
+    ));
+}
+
+function displayNote($note)
+{
+    println(sprintf('%s postée par %s', $note['note'], $note['by']));
 }
 
 $notesFile = __DIR__.'/notes';
@@ -38,13 +58,14 @@ $browser = new Buzz\Browser(new Buzz\Client\Curl());
 $response = $browser->get('http://tomuss.univ-lyon1.fr');
 
 // "lt" hidden field
+$matches = array();
 if (0 === preg_match('/name="lt" value="([A-Za-z0-9-]+)"/', $response->getContent(), $matches)) {
     println('Oops! Unable to find the "lt" hidden field from the content reponse... Are you in the CAS login form?');
     exit;
 }
 
 // Fields
-$lt = $matches[1];
+$lt       = $matches[1];
 $username = $argv[1];
 $password = $argv[2];
 
@@ -94,12 +115,20 @@ foreach($matches as $note) {
         'note' => $note[1]
     );
 
-    println(sprintf('%s postée par %s', $note[1], $note[3]));
+    // Display the note
+    if ('get' === $action) {
+        displayNote($notes[$note[4]]);
+    }
 }
 
-if (false === $new) {
-    println('Aucune nouvelle note disponible.');
-} else {
-    // dump!
+if (true === $new) {
     file_put_contents($notesFile, serialize($notes));
+} else if ('get' === $action) {
+    println('Aucune nouvelle note disponible.');
+}
+
+if ('show' === $action) {
+    foreach($notes as $note) {
+        displayNote($note);
+    }
 }
