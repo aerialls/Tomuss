@@ -95,7 +95,7 @@ $token = $matches[1];
 // ####################################
 
 // Big hack: The curl PHP API returns 0 bytes with this URL
-$output = exec('curl -L https://tomuss.univ-lyon1.fr/?ticket='.$token.' 2> /dev/null');
+$output = exec('curl -k -L https://tomuss.univ-lyon1.fr/?ticket='.$token.' 2> /dev/null');
 $regex = '/C\(([0-9]+([.][0-9]+)?),"([A-Za-z.]+)","([0-9]{14})"\)/';
 $new = false;
 
