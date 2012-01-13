@@ -1,5 +1,7 @@
 {
     "require": {
-        "kriswallsmith/buzz": "master-dev"
+        "kriswallsmith/buzz": "master-dev",
+        "symfony/dom-crawler": "2.1.*",
+        "symfony/css-selector": "2.1.*"
     }
 }

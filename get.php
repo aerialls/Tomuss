@@ -6,6 +6,8 @@
 
 require_once __DIR__.'/vendor/.composer/autoload.php';
 
+use Symfony\Component\DomCrawler\Crawler;
+
 $length = count($argv);
 if ($length < 3 || $length > 4) {
     echo "Too few arguments\n";
@@ -39,7 +41,7 @@ function println($message, $title = 'Tomuss')
 
 function displayNote($note)
 {
-    println(sprintf('%s postée par %s', $note['note'], $note['by']));
+    println(sprintf('%s en %s', $note['note'], $note['name']));
 }
 
 $notesFile = __DIR__.'/notes';
@@ -94,32 +96,50 @@ $token = $matches[1];
 
 // Big hack: The curl PHP API returns 0 bytes with this URL
 $output = exec('curl -L https://tomuss.univ-lyon1.fr/?ticket='.$token.' 2> /dev/null');
-
 $regex = '/C\(([0-9]+([.][0-9]+)?),"([A-Za-z.]+)","([0-9]{14})"\)/';
-
-if (0 === preg_match_all($regex, $output, $matches, PREG_SET_ORDER)) {
-    // No results
-    exit;
-}
-
 $new = false;
-foreach($matches as $note) {
-    if (isset($notes[$note[4]])) {
-        // Note alreay exists
-        continue;
+
+// Symfony2 Crawler
+$crawler = new Crawler();
+$crawler->addContent($output);
+
+$crawler->filter('h2.title')->each(function ($node, $i) use ($action, &$new, &$notes, $regex) {
+    $scriptTag = $node->nextSibling;
+    if (null === $scriptTag) {
+        return;
     }
 
-    $new = true;
-    $notes[$note[4]] = array(
-        'by'   => $note[3],
-        'note' => $note[1]
-    );
-
-    // Display the note
-    if ('get' === $action) {
-        displayNote($notes[$note[4]]);
+    // Get the name for the 'h2' tag
+    $matches = array();
+    $name = 'Unknow';
+    if (preg_match('/: ([^ ]+) ([^(]+) \(/', $node->textContent, $matches)) {
+        $name = $matches[1].' - '.$matches[2];
     }
-}
+
+    $scriptValue = $scriptTag->textContent;
+    if (0 === preg_match_all($regex, $scriptValue, $matches, PREG_SET_ORDER)) {
+        return;
+    }
+
+    foreach($matches as $note) {
+        if (isset($notes[$note[4]])) {
+            // Note alreay exists
+            continue;
+        }
+
+        $new = true;
+        $notes[$note[4]] = array(
+            'by'   => $note[3],
+            'note' => $note[1],
+            'name' => $name
+        );
+
+        // Display the note
+        if ('get' === $action) {
+            displayNote($notes[$note[4]]);
+        }
+    }
+});
 
 if (true === $new) {
     file_put_contents($notesFile, serialize($notes));
