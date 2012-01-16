@@ -41,7 +41,7 @@ function println($message, $title = 'Tomuss')
 
 function displayNote($note)
 {
-    println(sprintf('%s en %s', $note['note'], $note['name']));
+    println(sprintf('%s : %s en %s -- %s', $note['date']->format('d/m/Y à H:i'), $note['note'], $note['name'], str_replace('.', ' ', strtoupper($note['by']))));
 }
 
 $notesFile = __DIR__.'/notes';
@@ -128,10 +128,13 @@ $crawler->filter('h2.title')->each(function ($node, $i) use ($action, &$new, &$n
         }
 
         $new = true;
-        $notes[$note[4]] = array(
+        $d = $note[4];
+
+        $notes[$d] = array(
             'by'   => $note[3],
             'note' => $note[1],
-            'name' => $name
+            'name' => $name,
+            'date' => new DateTime(substr($d, 0, 4).'-'.substr($d, 4, 2).'-'.substr($d, 6, 2).' '.substr($d, 8, 2).":".substr($d, 10, 2).":".substr($d, 12))
         );
 
         // Display the note
