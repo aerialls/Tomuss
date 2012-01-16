@@ -1,10 +1,10 @@
-# Tomuss Hack
+# Tomuss
 
 Permet de visualiser rapidement l'ensemble de ses notes disponible sur Tomuss
 
 ## Installation
 
-Nécessite `PHP5.3` pour fonctionner ainsi que `cURL`.
+Nécessite `PHP 5.3` pour fonctionner ainsi que `cURL`.
 
     cd Tomuss-Hack
     wget http://getcomposer.org/composer.phar
@@ -14,13 +14,13 @@ Nécessite `PHP5.3` pour fonctionner ainsi que `cURL`.
 
 Pour récupérer les notes :
 
-    cd Tomuss-Hack
+    cd Tomuss
     php get.php username password
 
 Il est possible d'afficher l'ensemble des notes simplement en rajoutant un
 troisième paramètre `show` :
 
-    cd Tomuss-Hack
+    cd Tomuss
     php get.php username password show
 
 ## Fonctionnement
