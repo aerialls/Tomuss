@@ -6,6 +6,9 @@
 
 require_once __DIR__.'/vendor/.composer/autoload.php';
 
+use Buzz\Browser;
+use Buzz\Client\Curl;
+
 use Symfony\Component\DomCrawler\Crawler;
 
 $length = count($argv);
@@ -51,7 +54,7 @@ if (true === file_exists($notesFile)) {
     $notes = unserialize(file_get_contents($notesFile));
 }
 
-$browser = new Buzz\Browser(new Buzz\Client\Curl());
+$browser = new Browser(new Curl());
 
 // ####################################
 //    CAS Connection
