@@ -6,7 +6,7 @@ Permet de visualiser rapidement l'ensemble de ses notes disponible sur Tomuss
 
 Nécessite `PHP 5.3` pour fonctionner ainsi que `cURL`.
 
-    cd Tomuss-Hack
+    cd Tomuss
     wget http://getcomposer.org/composer.phar
     php composer.phar install
 
