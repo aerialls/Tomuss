@@ -1,7 +1,22 @@
 {
+    "name": "madalynn/tomuss",
+    "type": "application",
+    "description": "A script to automatically search for new notes in Tomuss",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Julien Brochet",
+            "email": "mewt@madalynn.eu"
+        }
+    ],
     "require": {
-        "kriswallsmith/buzz": "master-dev",
-        "symfony/dom-crawler": "2.1.*",
-        "symfony/css-selector": "2.1.*"
-    }
+        "fabpot/goutte": "dev-master",
+        "symfony/console": "2.1.*",
+        "symfony/filesystem": "2.1.*",
+        "madalynn/growl": "dev-master"
+    },
+    "autoload": {
+        "psr-0": { "Madalynn\\Tomuss": "src/" }
+    },
+    "bin": ["tomuss"]
 }

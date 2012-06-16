@@ -1,32 +1,34 @@
 # Tomuss
 
-Permet de visualiser rapidement l'ensemble de ses notes disponible sur Tomuss
+## Installation via Composer
 
-## Installation
-
-Nécessite `PHP 5.3` pour fonctionner ainsi que `cURL`.
-
-    cd Tomuss
-    wget http://getcomposer.org/composer.phar
-    php composer.phar install
+```
+wget http://getcomposer.org/composer.phar
+php composer.phar install
+```
 
 ## Utilisation
 
-Pour récupérer les notes :
+```
+php tomuss search /path/to/user.php
+```
 
-    cd Tomuss
-    php get.php username password
+## User configuration (user.php)
 
-Il est possible d'afficher l'ensemble des notes simplement en rajoutant un
-troisième paramètre `show` :
+```php
+<?php
 
-    cd Tomuss
-    php get.php username password show
+use Madalynn\Tomuss\User;
 
-## Fonctionnement
+$user = new User('user', 'password');
 
-Les notes sont stockées dans un fichier externe `notes`. Entre chaque mise à
-jour du programme il est conseillé de le supprimer et de réaliser la commande
-suivante :
+// Storage
+$storage = new Madalynn\Tomuss\Storage\FileStorage(__DIR__.'/cache');
+$user->setStorage($storage);
 
-    php composer.phar update
+// Notifiers
+$growl = new Madalynn\Tomuss\Notifier\GrowlNotifier();
+$user->addNotifier($growl);
+
+return $user;
+```
