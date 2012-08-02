@@ -22,7 +22,7 @@ use Madalynn\Tomuss\Note;
  */
 class Tomuss
 {
-    const VERSION = '2.0';
+    const VERSION = '2.1-DEV';
 
     /**
      * The user
