@@ -68,7 +68,6 @@ class Note
         return $this->id;
     }
 
-
     /**
      * Sets the date
      *

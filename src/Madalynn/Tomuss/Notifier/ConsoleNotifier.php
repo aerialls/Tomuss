@@ -21,7 +21,6 @@ use Madalynn\Tomuss\Note;
  */
 class ConsoleNotifier extends Notifier
 {
-
     /**
      * @var \Symfony\Component\Console\Output\OutputInterface
      */
