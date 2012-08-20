@@ -11,8 +11,6 @@
 
 namespace Madalynn\Tomuss;
 
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputInterface;
 use Goutte\Client;
 use Guzzle\Http\Client as GuzzleClient;
 use Madalynn\Tomuss\Note;
@@ -61,16 +59,12 @@ class Tomuss
      *
      * @param OutputInterface The output
      */
-    public function update(OutputInterface $output)
+    public function update()
     {
         $notes = $this->retrieveNotes();
 
         foreach ($notes as $note) {
             if (false === $this->user->contains($note)) {
-                if (OutputInterface::VERBOSITY_VERBOSE === $output->getVerbosity()) {
-                    $output->writeln(sprintf('  > <info>%s</info> in <comment>%s</comment> by %s', $note->getNote(), $note->getName(), $note->getAuthor()));
-                }
-
                 foreach ($this->user->getNotifiers() as $notifier) {
                     $notifier->notify($note);
                 }

@@ -17,6 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Madalynn\Tomuss\Tomuss;
 use Madalynn\Tomuss\User;
+use Madalynn\Tomuss\Notifier\ConsoleNotifier;
 
 /**
  * Search command
@@ -54,7 +55,11 @@ class SearchCommand extends Command
             throw new \InvalidArgumentException('The configuration file needs to return an User instance');
         }
 
+        if (OutputInterface::VERBOSITY_VERBOSE === $output->getVerbosity()) {
+            $user->addNotifier(new ConsoleNotifier($output));
+        }
+
         $tomuss = new Tomuss($user);
-        $tomuss->update($output);
+        $tomuss->update();
     }
 }
