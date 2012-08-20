@@ -16,6 +16,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Madalynn\Tomuss\Tomuss;
+use Madalynn\Tomuss\User;
 
 /**
  * Search command
@@ -49,8 +50,11 @@ class SearchCommand extends Command
         }
 
         $user = require($userPath);
-        $tomuss = new Tomuss($user);
+        if (!$user instanceof User) {
+            throw new \InvalidArgumentException('The configuration file needs to return an User instance');
+        }
 
+        $tomuss = new Tomuss($user);
         $tomuss->update($output);
     }
 }
