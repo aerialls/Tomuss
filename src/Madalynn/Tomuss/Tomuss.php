@@ -56,8 +56,6 @@ class Tomuss
 
     /**
      * Updates the user
-     *
-     * @param OutputInterface The output
      */
     public function update()
     {
