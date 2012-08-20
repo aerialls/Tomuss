@@ -7,13 +7,17 @@ wget http://getcomposer.org/composer.phar
 php composer.phar install
 ```
 
-## Utilisation
+## Usage
 
 ```
 php tomuss search /path/to/user.php
 ```
 
 ## User configuration (user.php)
+
+The configuration is stored inside a custom file (`user.php`). If Tomuss has no
+ideas where is the configuration file, it will looking for a `user.php` file
+on your private home directory inside the `.tomuss` folder.
 
 ```php
 <?php
