@@ -23,7 +23,7 @@ use Madalynn\Tomuss\User;
 $user = new User('user', 'password');
 
 // Storage
-$storage = new Madalynn\Tomuss\Storage\FileStorage(__DIR__.'/cache');
+$storage = new Madalynn\Tomuss\Storage\FilesystemStorage(__DIR__.'/cache');
 $user->setStorage($storage);
 
 // Notifiers

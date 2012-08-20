@@ -13,7 +13,7 @@ namespace Madalynn\Tomuss\Storage;
 
 use Symfony\Component\Filesystem\Filesystem;
 
-class FileStorage implements StorageInterface
+class FilesystemStorage implements StorageInterface
 {
     /**
      * The Filesystem
