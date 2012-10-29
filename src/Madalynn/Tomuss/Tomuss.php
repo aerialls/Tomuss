@@ -76,7 +76,7 @@ class Tomuss
 
     protected function retrieveNotes()
     {
-        $crawler = $this->client->request('GET', 'http://tomuss.univ-lyon1.fr/');
+        $crawler = $this->client->request('GET', 'https://tomuss.univ-lyon1.fr/');
         $form = $crawler->selectButton('Connexion')->form();
 
         $this->client->submit($form, array(
