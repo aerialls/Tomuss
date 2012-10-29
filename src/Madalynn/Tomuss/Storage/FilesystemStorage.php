@@ -3,7 +3,7 @@
 /*
  * This file is part of the Tomuss application.
  *
- * (c) Julien Brochet <mewt@madalynn.eu>
+ * (c) 2012 - Julien Brochet <mewt@madalynn.eu>
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
